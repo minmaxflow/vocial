@@ -6,6 +6,12 @@
   <%= label f, :eamil, "Email:" %>
   <%= text_input f, :email %>
   <br />
+  <%= label f, :password, "Password: "%>
+  <%= password_input f, :password %>
+  <br />
+  <%= label f, :password_confirmation, "Confirm your password:" %>
+  <%= password_input f, :password_confirmation %>
+  
   <%= submit "Sign Up" %>
 <% end %>
 </div>
