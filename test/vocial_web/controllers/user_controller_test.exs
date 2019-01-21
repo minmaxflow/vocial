@@ -27,7 +27,7 @@ defmodule VocialWeb.UserControllerTest do
   end
 
   test "POST /users", %{conn: conn} do 
-    user_params = %{"username" => "test", "email" => "test@test.com"}
+    _user_params = %{"username" => "test", "email" => "test@test.com"}
     conn = post conn, "/users", %{"user" => @create_params}
     assert redirected_to(conn) =~ "/users/"
   end
