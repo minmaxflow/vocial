@@ -67,6 +67,11 @@ defmodule Vocial.AccountTest do
       assert !user.valid?
     end
 
+    test "create_user/1 faild to create the user when the username is too short" do 
+      {:error, user} = user_fixture(%{username: "a"})
+      assert !user.valid?
+    end
+
   end
 
 end
