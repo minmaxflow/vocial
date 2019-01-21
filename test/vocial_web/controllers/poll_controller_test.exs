@@ -34,6 +34,18 @@ defmodule VocialWeb.PollControllerTest do
     assert redirected_to(conn) == "/polls/new"
   end
 
+  test "GET /polls/new without a logged in user", %{conn: conn} do 
+    conn = get(conn, "/polls/new")
+    assert redirected_to(conn) == "/"
+    assert get_flash(conn, :error) =~ "logged"
+  end
+
+  test "POST /polls (with valid data, without logged in user)", %{conn: conn} do 
+    conn = post(conn, "/polls", %{"poll" => %{"title" => "Test Poll"}, "options" => "a,b,c"})
+    assert redirected_to(conn) == "/"
+    assert get_flash(conn,:error) =~ "logged"
+  end
+
   defp login(conn, user) do
     conn |> post("/sessions", %{username: user.username, password: user.password})
   end
