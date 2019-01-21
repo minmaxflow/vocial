@@ -2,6 +2,12 @@ defmodule Vocal.VotesTest do
   use Vocial.DataCase 
 
   alias Vocial.Votes
+  alias Vocial.Accounts
+
+  setup do 
+    {:ok, user} = Accounts.create_user(%{username: "test", email: "test@test.com", password: "test", password_confirmation: "test"})
+    {:ok, user: user}
+  end
 
   describe "polls" do
     @valid_attrs %{title: "Hello"}
@@ -15,8 +21,8 @@ defmodule Vocal.VotesTest do
       end
     end
 
-    test "list_poll/0 return all polls" do 
-      poll = poll_fixture()
+    test "list_poll/0 return all polls", %{user: user} do 
+      poll = poll_fixture(%{user_id: user.id})
       assert Votes.list_polls() == [poll]
     end
 
@@ -25,23 +31,23 @@ defmodule Vocal.VotesTest do
       assert changeset.__struct__ == Ecto.Changeset
     end
 
-    test "create_poll/1 returns a new poll" do 
-      {:ok, poll} = Votes.create_poll(@valid_attrs)
+    test "create_poll/1 returns a new poll", %{user: user} do 
+      {:ok, poll} = Votes.create_poll(Map.put(@valid_attrs, :user_id, user.id))
       assert Enum.any?(Votes.list_polls(), fn p -> p.id == poll.id end)
     end
 
-    test "create_poll_with_options/2 returns a new poll with options" do 
+    test "create_poll_with_options/2 returns a new poll with options", %{user: user} do 
       title = "Poll With Options"
       options = ["Choice 1", "Choice 2", "Choice 3"]
-      {:ok, poll} = Votes.create_poll_with_options(%{title: title}, options)
+      {:ok, poll} = Votes.create_poll_with_options(%{title: title, user_id: user.id}, options)
       assert poll.title == title
       assert Enum.count(poll.options) == 3
     end
 
-    test "create_poll_with_options/2 does not create the poll or options with bad data" do 
+    test "create_poll_with_options/2 does not create the poll or options with bad data", %{user: user} do 
       title = "Bad Poll"
       options = ["Choice 1", nil, "Choice 3"]
-      {status, _} = Votes.create_poll_with_options(%{title: title}, options)
+      {status, _} = Votes.create_poll_with_options(%{title: title, user_id: user.id}, options)
       assert status == :error 
       assert !Enum.any?(Votes.list_polls(), fn p -> p.title == "Bad Poll" end)
     end
@@ -49,8 +55,8 @@ defmodule Vocal.VotesTest do
   end
 
   describe "options" do
-    test "create_option/1 creates an options on a poll" do 
-      with {:ok, poll} = Votes.create_poll(%{title: "Sample Poll"}),
+    test "create_option/1 creates an options on a poll", %{user: user} do 
+      with {:ok, poll} = Votes.create_poll(%{title: "Sample Poll", user_id: user.id}),
            {:ok, option} = Votes.create_option(%{title: "Sample Choice", votes: 0, poll_id: poll.id}),
            option <- Repo.preload(option, :poll)
       do 
