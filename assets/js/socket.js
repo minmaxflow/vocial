@@ -24,9 +24,13 @@ const socket = new Socket('/socket');
 socket.connect();
 
 const enableSocket = document.getElementById('enable-polls-channel');
+
 if (enableSocket) {
   const pollId = enableSocket.getAttribute('data-poll-id');
-  const channel = socket.channel('polls:' + pollId, {});
+  const remoteIp = document
+    .getElementsByName('remote_ip')[0]
+    .getAttribute('content');
+  const channel = socket.channel('polls:' + pollId, { remote_ip: remoteIp });
 
   channel
     .join()

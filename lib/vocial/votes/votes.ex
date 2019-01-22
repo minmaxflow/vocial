@@ -2,10 +2,10 @@ defmodule Vocial.Votes do
   import Ecto.Query, warn: false 
 
   alias Vocial.Repo
-  alias Vocial.Votes.{Poll, Option, Image}
+  alias Vocial.Votes.{Poll, Option, Image, VoteRecord}
 
   def list_polls do 
-    Repo.all(Poll) |> Repo.preload([:options, :image])
+    Repo.all(Poll) |> Repo.preload([:options, :image, :vote_records])
   end
 
   def list_options do 
@@ -54,12 +54,23 @@ defmodule Vocial.Votes do
     |> Repo.insert()
   end
 
-  def vote_on_option(option_id) do 
+  def vote_on_option(option_id, voter_ip) do 
     with option <- Repo.get!(Option, option_id),
-         votes <- option.votes + 1
+         false <- already_voted?(option.poll_id, voter_ip),
+         votes <- option.votes + 1,
+         {:ok, option} <- update_option(option, %{votes: votes}),
+         {:ok, _vote_recod} <- record_vote(%{poll_id: option.poll_id, ip_address: voter_ip})
     do 
-      update_option(option, %{votes: votes})
+      {:ok, option}
+    else 
+      _ -> {:error, "Could not place vote"}
     end
+  end
+
+  def already_voted?(poll_id, ip_address) do 
+    query = from vr in VoteRecord, where: vr.poll_id == ^poll_id and vr.ip_address == ^ip_address
+    votes = Repo.aggregate(query, :count, :id)
+    votes > 0
   end
 
   def update_option(option, attrs) do 
@@ -69,7 +80,7 @@ defmodule Vocial.Votes do
   end  
 
   def get_poll(id) do 
-    Repo.get!(Poll, id) |> Repo.preload([:options, :image])
+    Repo.get!(Poll, id) |> Repo.preload([:options, :image, :vote_records])
   end
 
   defp upload_file(%{"image" => image, "user_id" => user_id}, poll) do 
@@ -93,6 +104,12 @@ defmodule Vocial.Votes do
 
     %Image{} 
     |> Image.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def record_vote(%{poll_id: _poll_id, ip_address: _ip_address} = attrs) do 
+    %VoteRecord{}
+    |> VoteRecord.changeset(attrs)
     |> Repo.insert()
   end
 
