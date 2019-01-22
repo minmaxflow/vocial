@@ -1,7 +1,7 @@
 defmodule VocialWeb.PollsChannel do 
   use VocialWeb, :channel
 
-  def join("polls:lobby", _payload, socket) do 
+  def join("polls:" <> _poll_id, _payload, socket) do 
     {:ok, socket}
   end
 
@@ -12,7 +12,7 @@ defmodule VocialWeb.PollsChannel do
 
   def handle_in("vote", %{"option_id" => option_id}, socket) do 
     with {:ok, option} <- Vocial.Votes.vote_on_option(option_id) do 
-      broadcast socket, "new_vote", %{"option_id" => option.id, "votes" => option.votes}
+      broadcast socket, "new_vote", %{option_id:  option.id, votes: option.votes}
       {:reply, {:ok, %{option_id: option.id, votes: option.votes}}, socket}
     else 
       {:error, _} -> {:reply, {:error, %{message: "Faied to vote for options!"}}, socket}

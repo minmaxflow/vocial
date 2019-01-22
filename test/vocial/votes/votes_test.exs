@@ -52,6 +52,11 @@ defmodule Vocal.VotesTest do
       assert !Enum.any?(Votes.list_polls(), fn p -> p.title == "Bad Poll" end)
     end
 
+    test "show_poll/1 returns a specific poll", %{user: user} do 
+      poll = poll_fixture(%{user_id: user.id})
+      assert Votes.get_poll(poll.id) == poll
+    end
+
   end
 
   describe "options" do

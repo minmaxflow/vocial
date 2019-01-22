@@ -66,4 +66,8 @@ defmodule Vocial.Votes do
     |> Repo.update()
   end  
 
+  def get_poll(id) do 
+    Repo.get!(Poll, id) |> Repo.preload(:options)
+  end
+
 end
