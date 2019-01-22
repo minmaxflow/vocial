@@ -10,4 +10,13 @@ defmodule VocialWeb.PollsChannel do
     {:reply, {:ok, %{message: "pong"}}, socket}
   end
 
+  def handle_in("vote", %{"option_id" => option_id}, socket) do 
+    with {:ok, option} <- Vocial.Votes.vote_on_option(option_id) do 
+      broadcast socket, "new_vote", %{"option_id" => option.id, "votes" => option.votes}
+      {:reply, {:ok, %{option_id: option.id, votes: option.votes}}, socket}
+    else 
+      {:error, _} -> {:reply, {:error, %{message: "Faied to vote for options!"}}, socket}
+    end
+  end 
+
 end
