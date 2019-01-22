@@ -33,6 +33,9 @@ defmodule VocialWeb.PollController do
               |> redirect(to: poll_path(conn, :new))
     end
   end
+  def create(conn, %{"poll" => _poll_params, "options" => _options} = params) do 
+    create(conn, Map.put(params, "image_data", nil))
+  end
 
   def vote(conn, %{"id" => id}) do 
     voter_ip = conn.remote_ip 

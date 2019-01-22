@@ -12,7 +12,7 @@ defmodule VocialWeb.PollChannelTest do
     })
     {:ok, poll} = Vocial.Votes.create_poll_with_options(%{title: "My New Test Poll", user_id: user.id}, ["one", "two", "three"])
     {:ok, _, socket} = socket("user_id", %{user_id: user.id})
-                       |> subscribe_and_join(PollsChannel, "polls:#{poll.id}")
+                       |> subscribe_and_join(PollsChannel, "polls:#{poll.id}", %{"remote_ip" => "127.0.0.1"})
     {:ok, socket: socket, user: user, poll: poll}
   end
 
