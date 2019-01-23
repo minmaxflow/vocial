@@ -7,4 +7,4 @@ LivePolls.connect(socket);
 
 // Import the Chat Socket code to enable chat
 import LiveChat from './chat';
-LiveChat.connect(socket);
+LiveChat.loadChat(socket);
