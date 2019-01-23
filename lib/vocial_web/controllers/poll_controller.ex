@@ -5,7 +5,7 @@ defmodule VocialWeb.PollController do
   plug VocialWeb.VerifyUserSession when action in [:new, :create]
 
   def index(conn, _params) do 
-    polls = Votes.list_polls()
+    polls = Votes.list_most_recent_polls()
 
     conn 
     |> render("index.html", polls: polls)
