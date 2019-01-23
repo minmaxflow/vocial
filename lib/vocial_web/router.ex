@@ -17,6 +17,7 @@ defmodule VocialWeb.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
+    get "/history", PageController, :history
 
     resources "/polls", PollController, only: [:index, :new, :create, :show]
     get "/options/:id/vote", PollController, :vote

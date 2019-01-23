@@ -13,9 +13,9 @@ defmodule Vocial.Application do
       # Start the endpoint when the application starts
       supervisor(VocialWeb.Endpoint, []),
       
-      supervisor(VocialWeb.Presence, [])
+      supervisor(VocialWeb.Presence, []),
       # Start your own worker by calling: Vocial.Worker.start_link(arg1, arg2, arg3)
-      # worker(Vocial.Worker, [arg1, arg2, arg3]),
+      worker(Vocial.ChatCache, [])
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
