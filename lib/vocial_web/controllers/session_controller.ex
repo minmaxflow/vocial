@@ -70,7 +70,7 @@ defmodule VocialWeb.SessionController do
   end
 
   defp build_user_from_auth(auth) do 
-    password = random_string(64)
+    password = Accounts.random_string(64)
     %{
       username: auth.info.nickname,
       oauth_id: auth.id,
@@ -79,9 +79,4 @@ defmodule VocialWeb.SessionController do
       passowrd_confirmation: password
     }
   end
-
-  defp random_string(length) do 
-    :crypto.strong_rand_bytes(length) |> Base.url_encode64 |> binary_part(0, length)
-  end
-
 end

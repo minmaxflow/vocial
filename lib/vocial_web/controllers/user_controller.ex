@@ -27,4 +27,24 @@ defmodule VocialWeb.UserController do
     end
   end
 
+  def generate_api_key(conn, %{"id" => id}) do 
+    user = Accounts.get_user(id)
+
+    case Accounts.generate_api_key(user) do 
+      {:ok, _} -> 
+        conn
+        |> put_flash(:info, "Updated API key for user!")
+        |> redirect(to: user_path(conn, :show, user))
+      {:error, _} -> {
+        conn 
+        |> put_flash(:error, "Failed to generate API Key for user!")
+        |> redirect(to: user_path(conn, :show, user))
+      }
+    end
+
+    conn 
+    |> put_flash(:error, "Not implemented yet")
+    |> redirect(to: "/")
+  end
+
 end
