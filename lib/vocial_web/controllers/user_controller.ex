@@ -41,10 +41,6 @@ defmodule VocialWeb.UserController do
         |> redirect(to: user_path(conn, :show, user))
       }
     end
-
-    conn 
-    |> put_flash(:error, "Not implemented yet")
-    |> redirect(to: "/")
   end
 
 end
