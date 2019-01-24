@@ -36,4 +36,11 @@ defmodule Vocial.Accounts do
     :crypto.strong_rand_bytes(length) |> Base.url_encode64() |> binary_part(0, length)
   end
 
+  def verify_api_key(username, api_key) do 
+    case Repo.get_by(User, username: username, api_key: api_key) do 
+      nil -> false
+      _user -> true
+    end
+  end
+
 end

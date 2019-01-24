@@ -6,10 +6,8 @@ defmodule VocialWeb.PollController do
 
   def index(conn, params) do 
     %{"page" => page, "per_page" => per_page} = normalize_paging_params(params)
-    IO.inspect %{"page" => page, "per_page" => per_page}
     polls = Votes.list_most_recent_polls(page, per_page)
     opts = paging_options(polls, page, per_page)
-    IO.inspect opts
     conn 
     |> render("index.html", polls: polls, opts: opts)
   end

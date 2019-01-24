@@ -2,7 +2,7 @@ defmodule VocialWeb.Router do
   use VocialWeb, :router
 
   pipeline :browser do
-    plug :accepts, ["html"]
+    plug :accepts, ["html"] 
     plug :fetch_session
     plug :fetch_flash
     plug :protect_from_forgery
@@ -11,6 +11,7 @@ defmodule VocialWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug VocialWeb.VerifyApiKey
   end
 
   scope "/", VocialWeb do
@@ -41,6 +42,6 @@ defmodule VocialWeb.Router do
   scope "/api", VocialWeb do
     pipe_through :api
 
-    resources "/polls", Api.PollController, only: [:index]
+    resources "/polls", Api.PollController, only: [:index, :show]
   end
 end

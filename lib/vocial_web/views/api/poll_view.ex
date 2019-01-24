@@ -7,6 +7,12 @@ defmodule VocialWeb.Api.PollView do
     }
   end
 
+  def render("show.json", %{poll: poll}) do 
+    %{
+      poll: render_one(poll)
+    }
+  end
+
   def render_many(polls) do 
     Enum.map(polls, &render_one/1)
   end

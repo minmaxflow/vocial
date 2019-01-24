@@ -6,7 +6,7 @@
   <%= if api_key = @user.api_key do  %>
     <strong>Key</strong><%= api_key %>
   <% end %>
-  <%= form_for @conn, "/users/#{@user.id}/generate_api_key", [as: :user], fn f -> %>
+  <%= form_for @conn, "/users/#{@user.id}/generate_api_key", [as: :user], fn _f -> %>
     <%= submit "Generate API Key", class: "btn btn-primary"%>
   <% end %>
 </div>

@@ -90,7 +90,7 @@ defmodule Vocial.Votes do
   end  
 
   def get_poll(id) do 
-    Repo.get!(Poll, id) |> Repo.preload([:options, :image, :vote_records, :messages])
+    Repo.get(Poll, id) |> Repo.preload([:options, :image, :vote_records, :messages])
   end
 
   defp upload_file(%{"image" => image, "user_id" => user_id}, poll) do 
