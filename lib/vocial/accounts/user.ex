@@ -11,6 +11,9 @@ defmodule Vocial.Accounts.User do
     field :active, :boolean, default: true 
     field :encrypted_password, :string
 
+    field :oauth_provider, :string 
+    field :oauth_id, :string
+
     field :password, :string, virtual: true 
     field :password_confirmation, :string, virtual: true
 
@@ -22,12 +25,12 @@ defmodule Vocial.Accounts.User do
 
   def changeset(%User{} = user, attrs) do
     user
-    |> cast(attrs, [:username, :email, :active, :password, :password_confirmation])
+    |> cast(attrs, [:username, :email, :active, :password, :password_confirmation, :oauth_provider, :oauth_id])
     |> validate_confirmation(:password, message: "does not match password!")
     |> unique_constraint(:username)
     |> validate_length(:username, min: 3, max: 100)
     |> encrypt_password()
-    |> validate_required([:username, :email, :active, :encrypted_password])
+    |> validate_required([:username, :active, :encrypted_password])
     |> validate_format(:email, ~r/@/)
   end
 

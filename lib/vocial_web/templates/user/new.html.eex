@@ -1,3 +1,5 @@
 <h2>User Signup</h2>
 <hr />
+
+<%= link "Login with Twitter", to: "/auth/twitter" %>
 <%= render("form.html", %{user: @user, conn: @conn}) %>
